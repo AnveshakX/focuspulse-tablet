@@ -10,29 +10,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Unpack Project & Force 3:00 Timer Reset on Next
+      - name: Unpack project
         run: |
           NEWEST_ZIP=$(ls -t *.zip 2>/dev/null | head -n 1 || true)
           if [ -n "$NEWEST_ZIP" ]; then
             rm -rf app build.gradle.kts settings.gradle.kts gradle.properties
             unzip -o "$NEWEST_ZIP"
           fi
-          if [ -f "JEE Timer.html" ]; then
-            cp -f "JEE Timer.html" app/src/main/assets/www/index.html
-          fi
-          python3 - << 'EOF'
-          import pathlib
-          p = pathlib.Path("app/src/main/assets/www/index.html")
-          if p.exists():
-              s = p.read_text(encoding="utf-8")
-              s = s.replace("$('gC').value=g?g.g:'';$('gT').value=t?t/60:'';", "$('gC').value=g?g.g:'';$('gT').value='';")
-              s = s.replace("function newQ(){S.n++;S.el=0;S.a=0;S.b=0;S.tag='';S.beeped=false;S.running=true;S.last=Date.now();prog();draw();}", "function newQ(){S.n++;S.el=0;S.a=0;S.b=0;S.tag='';S.beeped=false;S.running=true;S.last=Date.now();S.tg=LIM;prog();draw();}")
-              p.write_text(s, encoding="utf-8")
-              print("Applied 3:00 timer reset fix to index.html")
-          EOF
-       - name: Use latest HTML
-          run: cp -f jee-timer.html app/src/main/assets/www/index.html
-         
+
+      - name: Use latest HTML
+        run: cp -f jee-timer.html app/src/main/assets/www/index.html
+
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
