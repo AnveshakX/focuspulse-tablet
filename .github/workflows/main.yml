@@ -30,7 +30,9 @@ jobs:
               p.write_text(s, encoding="utf-8")
               print("Applied 3:00 timer reset fix to index.html")
           EOF
-
+       - name: Use latest HTML
+          run: cp -f jee-timer.html app/src/main/assets/www/index.html
+         
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
